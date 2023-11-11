@@ -1,0 +1,4 @@
+name = "MadrasSokal"
+uuid = "5c0a986f-5b00-49c7-a63c-a994e876fa55"
+authors = ["Fabian Zierler <fabian.zierler@a1.net>"]
+version = "0.1.0"
