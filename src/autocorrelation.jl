@@ -10,15 +10,15 @@ end
 # With the default maximal window size tmax=length(x)÷10,  
 # the Madras-Sokal variance estimate is such that at tmax
 # Δτ ÷ τ = 1/sqrt(2.5) ≈ 0.63
-function madras_sokal_estimator_windows(x;tmax=length(x)÷10)
-    Γ = zeros(eltype(x),tmax)
-    for t in 1:tmax
+function madras_sokal_estimator_windows(x;max_window=length(x)÷4)
+    Γ = zeros(eltype(x),max_window)
+    for t in 1:max_window
         Γ[t] = madras_sokal_estimator_fixedt(x, t)
     end
     return Γ 
 end
-function madras_sokal_windows(x)
-    Γ  = madras_sokal_estimator_windows(x)
+function madras_sokal_windows(x;kws...)
+    Γ  = madras_sokal_estimator_windows(x;kws...)
     τ  = 1/2 .+ cumsum(Γ/Γ[1])
     Δτ = similar(τ)
     N  = length(x)
@@ -27,12 +27,12 @@ function madras_sokal_windows(x)
     end
     return τ, Δτ
 end
-function madras_sokal_time(x,therms)
+function madras_sokal_time(x,therms;kws...)
     τ  = zeros(Float64,size(therms))
     Δτ = zeros(Float64,size(therms))
     for j in eachindex(therms)
         xc = x[therms[j]:end]
-        τ_windows, Δτ_windows = madras_sokal_windows(xc)
+        τ_windows, Δτ_windows = madras_sokal_windows(xc;kws...)
         τ[j], W = findmax(τ_windows)
         Δτ[j]   = Δτ_windows[W]
     end
