@@ -53,12 +53,21 @@ function autocorrelation_overview(obs,obslabel,therm;thermstep=50,kws...)
     plot(plt0,plt1,plt2,plt3,layout=l,size=s;kws...)
 end
 
-dir = "/home/fabian/Documents/Lattice/PlaquettesTursa/plaquettes"
-files = readdir(dir,join=true) 
-file  = files[6]
-configurations, plaq = plaquettes_grid(file)
+dir    = "/home/fabian/Documents/Lattice/PlaquettesTursa/plaquettes"
+files  = readdir(dir,join=true) 
+therms = [1000,1000,1000,1,3000,4000]
 
-therm = 1000
-obslabel = L"\langle P ~ \rangle"
-plt = autocorrelation_overview(plaq,obslabel,therm)
-plot!(plt,plot_title=basename(file))
+for i in eachindex(files)
+    file = files[i]
+    therm = therms[i] 
+
+    configurations, plaq = plaquettes_grid(file)
+
+    obslabel = L"\langle P ~ \rangle"
+    plt = autocorrelation_overview(plaq,obslabel,therm)
+    plot!(plt,plot_title=basename(file))
+    
+    dir = "plots/"
+    isdir(dir) || mkdir(dir)
+    savefig(joinpath(dir,basename(file)*".pdf"))
+end
