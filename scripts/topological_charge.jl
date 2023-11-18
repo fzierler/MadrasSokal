@@ -5,29 +5,6 @@ using Distributions
 using LaTeXStrings
 gr(frame=:box,legendfontsize=10)
 
-function plaquettes_grid(file)
-    plaquettes = Float64[]
-    configurations = Int64[]
-    for line in eachline(file)
-        p = findfirst("Plaquette",line)
-        line = line[p[end]+2:end]
-        line = replace(line,"[" =>" ")
-        line = replace(line,"]" =>" ")
-        data =  split(line)
-        append!(configurations,parse(Int64,data[1]))
-        append!(plaquettes,parse(Float64,data[2]))
-    end
-    perm = sortperm(configurations)
-    permute!(plaquettes,perm)
-    permute!(configurations,perm)
-    # only keep one value for every configurations
-    # unique indices
-    _unique_indices(x) = unique(i -> x[i],1:length(x))
-    inds = _unique_indices(configurations)
-    configurations = getindex(configurations,inds)
-    plaquettes = getindex(plaquettes,inds)
-    return configurations, plaquettes
-end
 function autocorrelation_overview(obs,obslabel,therm;thermstep=50,kws...)
     # Assume scalar variable
     # Determine a suitable n_therm by looking at τ as a function 
@@ -59,23 +36,23 @@ function autocorrelation_overview(obs,obslabel,therm;thermstep=50,kws...)
     plot(plt0,plt1,plt2,plt3,layout=l,size=s;kws...)
 end
 
-dir    = "/home/fabian/Documents/Lattice/PlaquettesTursa/plaquettes"
-files  = readdir(dir,join=true) 
-therms = [1000,1000,1000,500,3000,4000]
+files  = readdir("output",join=true) 
+therms = [1,1,1]
+
+using DelimitedFiles
 
 for i in eachindex(files)
-    i == 4 && continue
     file = files[i]
     therm = therms[i] 
 
-    configurations, plaq = plaquettes_grid(file)
-
+    data = readdlm(files[i],',';skipstart=1)
+    cfgn, Q = Int.(data[:,1]), data[:,2]
+    
     obslabel = L"\langle P ~ \rangle"
-    plt = autocorrelation_overview(plaq,obslabel,therm)
+    plt = autocorrelation_overview(Q,obslabel,therm)
     plot!(plt,plot_title=basename(file))
     
     dir = "plots/"
     isdir(dir) || mkdir(dir)
     savefig(joinpath(dir,basename(file)*".pdf"))
-    display(plt)
 end

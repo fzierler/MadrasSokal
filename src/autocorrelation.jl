@@ -27,11 +27,12 @@ function madras_sokal_windows(x;kws...)
     end
     return τ, Δτ
 end
-function madras_sokal_time(x,therms;kws...)
+function madras_sokal_time(x,therms;stop=length(x).-therms,kws...)
     τ  = zeros(Float64,size(therms))
     Δτ = zeros(Float64,size(therms))
     for j in eachindex(therms)
-        xc = x[therms[j]:end]
+        # default value of stop is chosen, such that it is the end of x
+        xc = x[therms[j]:therms[j]+stop[j]]
         τ_windows, Δτ_windows = madras_sokal_windows(xc;kws...)
         τ[j], W = findmax(τ_windows)
         Δτ[j]   = Δτ_windows[W]
