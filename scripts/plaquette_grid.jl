@@ -61,21 +61,21 @@ end
 
 dir    = "/home/fabian/Documents/Lattice/PlaquettesTursa/plaquettes"
 files  = readdir(dir,join=true) 
-therms = [1000,1000,1000,500,3000,4000]
+therms = [1000,1000,1000,1000,1000,3000,4000]
 
 for i in eachindex(files)
-    i == 4 && continue
+    #i != 4 && continue
     file = files[i]
     therm = therms[i] 
 
     configurations, plaq = plaquettes_grid(file)
-
+    
     obslabel = L"\langle P ~ \rangle"
     plt = autocorrelation_overview(plaq,obslabel,therm)
     plot!(plt,plot_title=basename(file))
     
     dir = "plots/"
     isdir(dir) || mkdir(dir)
-    savefig(joinpath(dir,basename(file)*".pdf"))
+    #savefig(joinpath(dir,basename(file)*".pdf"))
     display(plt)
 end
