@@ -45,6 +45,6 @@ for i in eachindex(files)
     
     dir = "plots/"
     isdir(dir) || mkdir(dir)
-    savefig(joinpath(dir,basename(file)*".pdf"))
-    #display(plt)
+    #savefig(joinpath(dir,basename(file)*".pdf"))
+    display(plt)
 end
