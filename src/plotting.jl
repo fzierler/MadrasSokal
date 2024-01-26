@@ -1,5 +1,5 @@
 fit_histogram_plot(data;kws...) = fit_histogram_plot!(plot(),data;kws...) 
-function fit_histogram_plot!(plt,data;kws...)
+function fit_histogram_plot!(plt,data;orientation=:v,l1="",l2="",kws...)
     # Fit plaquette to a Normal Distributions
     d = fit(Normal, data)
     # set up plot range for dsitribution
@@ -7,10 +7,47 @@ function fit_histogram_plot!(plt,data;kws...)
     x = range(lo, hi; length = 100)
 
     # plot histogram and overlay fit
-    histogram!(plt,data,normalize=true,label="")
-    plot!(plt, x, pdf.(d,x), lw=5, color=:black,label="";kws...)
+    if orientation == :v
+        histogram!(plt,data,normalize=true,label="";orientation=:v)
+        plot!(plt, x, pdf.(d,x), label="";kws...)
+        # hack in the autocorrelation times
+        plot!(plt,[missing],[missing],label=l1,lc=:white)
+        plot!(plt,[missing],[missing],label=l2,lc=:white)
+    else
+        xl = ylims(histogram(data,normalize=true))
+        histogram!(plt,data,normalize=true,label="",orientation=:h)
+        plot!(plt,[missing],[missing],label=l1,lc=:white)
+        plot!(plt,[missing],[missing],label=l2,lc=:white)
+        plot!(plt, pdf.(d,x), x, label="";ylims=(lo,hi), xlims=xl, kws...)
+    end
     return plt
 end
+function publication_plot(obs,obslabel,therm;thermstep=1,minlags=100,kws...)
+    # Assume scalar variable
+    # Determine a suitable n_therm by looking at τ as a function 
+    # of the thermalisation cut, as well as a histogram of the plaquette
+    therms = collect(1:thermstep:length(obs)÷2)
+    τ_therm, Δτ_therm = madras_sokal_time(obs,therms)
+    
+    # If therm is too large use the maximal value of thermstep
+    therm = min(maximum(therms),therm)
+    o = obs[therm:end]
+    
+    τ, Δτ = madras_sokal_windows(o)
+    τmax, W = findmax(τ)
+    τexp = exponential_autocorrelation_time(obs[therm:end];minlags)
+    l1 = L"τ_{\rm int}=%$(round(τmax,digits=1))"
+    l2 = L"(τ_{\rm exp}=%$(round(τexp,digits=1)))"
+
+    plt1 = plot(therm:therm+length(o)-1,o ; ylabel=obslabel, label="") 
+    plt2 = fit_histogram_plot(o,lw=2,color=:red;l1,l2)
+    #display(plt2)
+    plt2 = fit_histogram_plot(o,orientation=:h,lw=2,color=:red;l1,l2)
+    #display(plt2)
+    plot!(plt1,ylims=ylims(plt2))
+    plt = plot(plt1,plt2,link=:y,layout=grid(1,2,widths = [0.7,0.3]);kws...)
+    return plt, τmax, τexp
+end 
 function autocorrelation_overview(obs,obslabel,therm;thermstep=1,minlags=100,with_exponential=false,kws...)
     # Assume scalar variable
     # Determine a suitable n_therm by looking at τ as a function 
@@ -43,7 +80,7 @@ function autocorrelation_overview(obs,obslabel,therm;thermstep=1,minlags=100,wit
     vline!(plt0,[therm],label=thermlabel,legend=:topright)
     scatter!(plt0,[therm],[τmax],label=τlabel)
     plt1 = serieshistogram(o,ylims=extrema(o),title="")
-    plt2 = fit_histogram_plot(o,xlabel=obslabel,ylabel="count")
+    plt2 = fit_histogram_plot(o,xlabel=obslabel,ylabel="count",lw=2,color=:red)
     plt3 = plot(τ, ribbon = Δτ,label="",xlabel=L"window size $W$", ylabel=L"\tau_{\rm MS}")
     scatter!(plt3,[W],[τmax],label=τlabel)
     
