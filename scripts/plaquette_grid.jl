@@ -30,10 +30,12 @@ function plaquettes_grid(file)
     return configurations, plaquettes
 end
 
-dir    = "/home/fabian/Documents/Lattice/PlaquettesTursa/plaquettes"
+dir = "/home/fabian/Documents/Lattice/PlaquettesTursa/plaquettes"
+dir = "/home/fabian/Dokumente/Physics/Lattice/PlaquettesTursa/plaquettes"
+
 files  = readdir(dir,join=true) 
 basename.(files)
-therms = [500,1000,1000,1000,1000,3000,4000]
+therms = [500,1000,1000,1000,1300,3000,4000]
 L = [20,20,20,28,32,20,20]
 T = [48,64,64,64,64,80,90]
 
@@ -43,9 +45,10 @@ for i in eachindex(files)
     configurations, plaq = plaquettes_grid(file)
     
     obslabel = L"\langle P ~ \rangle"
-
-    plt,τmax,τexp = MadrasSokal.publication_plot(plaq,obslabel,therm;thermstep=100,minlags=1000)
     title = latexstring(L"\beta = 6.5, ~~ T \times L^3 = %$(T[i]) \times %$(L[i])^3")
+
+    #=
+    plt,τmax,τexp = MadrasSokal.publication_plot(plaq,obslabel,therm;thermstep=100,minlags=1000)
 
     plot!(plt,size=(800,300),plot_title=title)  
     display(plt)
@@ -53,12 +56,13 @@ for i in eachindex(files)
     dir = "plots/plaquette_publication"
     isdir(dir) || mkdir(dir)
     #savefig(joinpath(dir,basename(file)*".pdf"))
+    =#
 
-    #plt = autocorrelation_overview(plaq,obslabel,therm;thermstep=100,minlags=1000,with_exponential=true,publication_plot=true)
-    #plot!(plt,plot_title=title)  
-    #display(plt)
+    plt = autocorrelation_overview(plaq,obslabel,therm;thermstep=100,minlags=1000,with_exponential=true,publication_plot=true)
+    plot!(plt,plot_title=title)  
+    display(plt)
 
-    #dir = "plots/plaquette"
-    #isdir(dir) || mkdir(dir)
-    #savefig(joinpath(dir,basename(file)*".pdf"))
+    dir = "plots/plaquette"
+    isdir(dir) || mkdir(dir)
+    savefig(joinpath(dir,basename(file)*".pdf"))
 end
