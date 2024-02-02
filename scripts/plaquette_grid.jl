@@ -52,7 +52,7 @@ for i in eachindex(files)
 
     plot!(plt,size=(800,300),plot_title=title)  
     display(plt)
-    
+
     dir = "plots/plaquette_publication"
     isdir(dir) || mkdir(dir)
     #savefig(joinpath(dir,basename(file)*".pdf"))
