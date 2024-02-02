@@ -3,6 +3,7 @@ using MadrasSokal
 using Plots
 using Distributions
 using LaTeXStrings
+include("tools.jl")
 gr(fontfamily="Computer Modern", frame=:box, top_margin=4Plots.mm, left_margin=4Plots.mm)
 gr(tickfontsize=10,labelfontsize=12,titlefontsize=14)
 
@@ -30,9 +31,7 @@ function plaquettes_grid(file)
     return configurations, plaquettes
 end
 
-dir = "/home/fabian/Documents/Lattice/PlaquettesTursa/plaquettes"
-dir = "/home/fabian/Dokumente/Physics/Lattice/PlaquettesTursa/plaquettes"
-
+dir    = "/home/fabian/Documents/Lattice/PlaquettesTursa/plaquettes"
 files  = readdir(dir,join=true) 
 basename.(files)
 therms = [500,1000,1000,1000,1300,3000,4000]

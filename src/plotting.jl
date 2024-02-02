@@ -35,6 +35,7 @@ function publication_plot(obs,obslabel,therm;thermstep=1,minlags=100,kws...)
     
     τ, Δτ = madras_sokal_windows(o)
     τmax, W = findmax(τ)
+    Δτmax = Δτ[W] 
     τexp = exponential_autocorrelation_time(obs[therm:end];minlags)
     l1 = L"τ_{\rm int}=%$(round(τmax,digits=1))"
     l2 = L"(τ_{\rm exp}=%$(round(τexp,digits=1)))"
@@ -46,7 +47,7 @@ function publication_plot(obs,obslabel,therm;thermstep=1,minlags=100,kws...)
     #display(plt2)
     plot!(plt1,ylims=ylims(plt2))
     plt = plot(plt1,plt2,link=:y,layout=grid(1,2,widths = [0.7,0.3]);kws...)
-    return plt, τmax, τexp
+    return plt, τmax, Δτmax, τexp
 end 
 function autocorrelation_overview(obs,obslabel,therm;thermstep=1,minlags=100,with_exponential=false,kws...)
     # Assume scalar variable
