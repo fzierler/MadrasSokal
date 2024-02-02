@@ -14,7 +14,8 @@ therms = ones(Int,length(files))
 L = [20,24,28,32,32,36,36,20,20,32,20,20]
 T = [48,48,48,56,56,56,56,64,64,64,80,90]
 β = [6.5,6.45,6.45,6.45,6.45,6.45,6.45,6.5,6.5,6.5,6.5,6.5]
-therms[10] = 85
+therms[1]  = 108 # special case thermalisation for T=48 L=20
+therms[10] = 85  # special case thermalisation for L=32
 
 for i in eachindex(files)
 
