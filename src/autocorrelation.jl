@@ -39,3 +39,9 @@ function madras_sokal_time(x,therms;stop=length(x).-therms,kws...)
     end
     return τ, Δτ
 end
+function madras_sokal_time(x;kws...)
+    τ_windows, Δτ_windows = madras_sokal_windows(x;kws...)
+    τ, W = findmax(τ_windows)
+    Δτ   = Δτ_windows[W]
+    return τ, Δτ
+end

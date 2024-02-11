@@ -15,5 +15,7 @@ include("serieshistogram.jl")
 export serieshistogram
 include("exponential.jl")
 export exponential_autocorrelation_time
+include("utils.jl")
+export stdmean, parse_filename, parse_ω0
 
 end # module MadrasSokal
