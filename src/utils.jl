@@ -21,3 +21,26 @@ function stdmean(X;bin=1)
     s = std(X)/sqrt(N/bin)
     return m, s
 end
+function plaquettes_tursa(file)
+    plaquettes = Float64[]
+    configurations = Int64[]
+    for line in eachline(file)
+        p = findfirst("Plaquette",line)
+        line = line[p[end]+2:end]
+        line = replace(line,"[" =>" ")
+        line = replace(line,"]" =>" ")
+        data =  split(line)
+        append!(configurations,parse(Int64,data[1]))
+        append!(plaquettes,parse(Float64,data[2]))
+    end
+    perm = sortperm(configurations)
+    permute!(plaquettes,perm)
+    permute!(configurations,perm)
+    # only keep one value for every configurations
+    # unique indices
+    _unique_indices(x) = unique(i -> x[i],1:length(x))
+    inds = _unique_indices(configurations)
+    configurations = getindex(configurations,inds)
+    plaquettes = getindex(plaquettes,inds)
+    return configurations, plaquettes
+end

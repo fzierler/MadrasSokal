@@ -14,41 +14,29 @@ outfile = joinpath("output","topology.csv")
 io      = open(outfile,"w")
 write(io,"beta,am0f,am0as,Nt,Ns,Nconf,w0,Delta_w0,Q,Delta_Q,τint_Q,Delta_τint_Q\n")
 
-for file in files
+using DelimitedFiles
 
-    T, L, β, amf0, amas0 = _parameters_from_filename(file)
-    
-    therm = 1 
-    T == 48 && L == 20 && (therm = 150) # special case thermalisation for T=48 L=20
-    T == 64 && L == 32 && (therm = 85)  # special case thermalisation for L=32
-    
-    β ≈ 6.5 || continue # for now only study enembles with β=6.5
-        
-    data = readdlm(file,',';skipstart=1)
+for i in eachindex(files)
+    file = files[i]
+    therm = therms[i] 
+
+    data = readdlm(files[i],',';skipstart=1)
     cfgn, Q = Int.(data[:,1]), data[:,2]
     
     obslabel = L"Q"
-    plt,τmax,Δτmax,τexp = MadrasSokal.publication_plot(Q,obslabel,therm)
-    title = latexstring(L"\beta = %$β, ~~ N_t \times N_s^3 = %$T \times %$(L)^3")
-    
-    # calculate average topological charge (with binning)
-    ω0, Δω0 = _wilson_flow_scale_from_file(file)
-    mQ, sQ  = _binned_mean_std(Q[therm:end],bin=2)
-    Ncfg    = length(Q)-therm+1
-    
-    write(io,"$β,$amf0,$amas0,$T,$L,$Ncfg,$ω0,$Δω0,$mQ,$sQ,$τmax,$Δτmax\n")
+    title = latexstring(L"\beta = %$(β[i]), ~~ T \times L^3 = %$(T[i]) \times %$(L[i])^3")
 
-    dir = "plots/topology_publication"
-    plot!(plt,size=(800,300),plot_title=title)  
-    isdir(dir) || mkdir(dir)
-    savefig(joinpath(dir,basename(file)*".pdf"))
+    dir1 = "plots/topology_publication"
+    dir2 = "plots/dial_topological_charge"
+    isdir(dir1) || mkdir(dir1)
+    isdir(dir2) || mkdir(dir2)
 
-    dir = "plots/topology"
-    plt = autocorrelation_overview(Q,obslabel,therm;with_exponential=true)
-    plot!(plt,plot_title=title)   
-    isdir(dir) || mkdir(dir)
-    savefig(joinpath(dir,basename(file)*".pdf"))
-    display(plt)
+    plt1,τmax,τexp = MadrasSokal.publication_plot(Q,obslabel,therm)
+    plt2 = autocorrelation_overview(Q,obslabel,therm;with_exponential=true)
+    
+    plot!(plt1,size=(800,300),plot_title=title)  
+    plot!(plt2,plot_title=basename(file))
+
+    savefig(joinpath(dir1,basename(file)*".pdf"))
+    savefig(joinpath(dir2,basename(file)*".pdf"))
 end
-
-close(io)
