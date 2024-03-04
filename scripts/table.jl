@@ -5,6 +5,7 @@ files  = readdir("../flow_analysis/outputDiaL",join=true)
 
 io1 = open("output/table.csv","w")
 io2 = open("output/tableHR.csv","w")
+io3 = open("output/table.tex","w")
 
 write(io1,"beta,T,L,mf,mas,ω0,Δω0,p,Δp,Q,ΔQ,first,last,skip,Nconf\n")
 write(io2,"beta,mas,mf,Nt,Nl,first,skip,Nconf,p,ω0,τ(Q),Q\n")
@@ -31,8 +32,10 @@ for file in files
     # write to csv file
     write(io1,"$beta,$T,$L,$mf,$mas,$ω0,$Δω0,$p,$Δp,$Q,$ΔQ,$Nfirst,$Nlast,$Nskip,$Nconf\n")
     write(io2,"$beta,$mas,$mf,$T,$L,$Nfirst,$Nskip,$Nconf,$(errorstring(p,Δp)),$(errorstring(ω0,Δω0)),$(errorstring(τQ,ΔτQ)),$(errorstring(Q,ΔQ))\n")
+    write(io3,"$beta & $mas & $mf & $T & $L & $Nfirst & $Nskip & $Nconf & $(errorstring(p,Δp)) & $(errorstring(ω0,Δω0)) & $(errorstring(τQ,ΔτQ)) & $(errorstring(Q,ΔQ))\\\\ \n")
 end
 
 close(io1)
 close(io2)
+close(io3)
 
