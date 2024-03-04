@@ -2,11 +2,14 @@ using DelimitedFiles
 using MadrasSokal
 
 files  = readdir("../flow_analysis/outputDiaL",join=true) 
-io = open("output/table.csv","w")
-write(io,"beta,T,L,mf,mas,ω0,Δω0,p,Δp,Q,ΔQ,first,last,skip,Nconf\n")
+
+io1 = open("output/table.csv","w")
+io2 = open("output/tableHR.csv","w")
+
+write(io1,"beta,T,L,mf,mas,ω0,Δω0,p,Δp,Q,ΔQ,first,last,skip,Nconf\n")
+write(io2,"beta,mas,mf,Nt,Nl,first,skip,Nconf,p,ω0,τ(Q),Q\n")
 
 for file in files
-
     T, L, beta, mf,  mas = parse_filename(file)
     header  = readline(file)
     ω0, Δω0 = parse_ω0(header)
@@ -26,7 +29,10 @@ for file in files
     τP, ΔτP = madras_sokal_time(plaq)
     τQ, ΔτQ = madras_sokal_time(topo)
     # write to csv file
-    write(io,"$beta,$T,$L,$mf,$mas,$ω0,$Δω0,$p,$Δp,$Q,$ΔQ,$Nfirst,$Nlast,$Nskip,$Nconf\n")
+    write(io1,"$beta,$T,$L,$mf,$mas,$ω0,$Δω0,$p,$Δp,$Q,$ΔQ,$Nfirst,$Nlast,$Nskip,$Nconf\n")
+    write(io2,"$beta,$mas,$mf,$T,$L,$Nfirst,$Nskip,$Nconf,$(errorstring(p,Δp)),$(errorstring(ω0,Δω0)),$(errorstring(τQ,ΔτQ)),$(errorstring(Q,ΔQ))\n")
 end
-close(io)
+
+close(io1)
+close(io2)
 
