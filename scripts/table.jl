@@ -1,11 +1,14 @@
+using Pkg; Pkg.activate("."); Pkg.instantiate()
 using DelimitedFiles
 using MadrasSokal
+println("Write table 1...")
 
-files  = readdir("../flow_analysis/outputDiaL",join=true) 
+files  = readdir("../output/flow_analysis",join=true) 
 
-io1 = open("output/table.csv","w")
-io2 = open("output/tableHR.csv","w")
-io3 = open("output/table.tex","w")
+ispath("../output/tables/") || mkpath("../output/tables/")
+io1 = open("../output/tables/table1_machine_readable.csv","w")
+io2 = open("../output/tables/table1_human_readable.csv","w")
+io3 = open("../output/tables/table1.tex","w")
 
 write(io1,"beta,T,L,mf,mas,ω0,Δω0,p,Δp,Q,ΔQ,first,last,skip,Nconf\n")
 write(io2,"beta,mas,mf,Nt,Nl,first,skip,Nconf,p,ω0,τ(Q),Q\n")

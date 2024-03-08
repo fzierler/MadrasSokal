@@ -7,18 +7,20 @@ using DelimitedFiles
 include("tools.jl")
 gr(fontfamily="Computer Modern", frame=:box, top_margin=4Plots.mm, left_margin=4Plots.mm)
 gr(tickfontsize=10,labelfontsize=12,titlefontsize=14)
+println("Topological charge autocorrelation...")
 
 # output from DiaL
-files   = readdir("../flow_analysis/outputDiaL",join=true) 
-outfile = joinpath("output","topology.csv")
-io      = open(outfile,"w")
-write(io,"beta,am0f,am0as,Nt,Ns,Nconf,w0,Delta_w0,Q,Delta_Q,τint_Q,Delta_τint_Q\n")
+files = readdir("../output/flow_analysis",join=true) 
+param = readdlm("../output/tables/table1_machine_readable.csv",',',skipstart=1)
 
-using DelimitedFiles
+T = Int.(param[:,2])
+L = Int.(param[:,3])
+β = param[:,1]
 
 for i in eachindex(files)
-    file = files[i]
-    therm = therms[i] 
+    file  = files[i]
+    therm = 1
+    println(basename(file))
 
     data = readdlm(files[i],',';skipstart=1)
     cfgn, Q = Int.(data[:,1]), data[:,2]
@@ -26,8 +28,8 @@ for i in eachindex(files)
     obslabel = L"Q"
     title = latexstring(L"\beta = %$(β[i]), ~~ T \times L^3 = %$(T[i]) \times %$(L[i])^3")
 
-    dir1 = "plots/topology_publication"
-    dir2 = "plots/dial_topological_charge"
+    dir1 = "../output/plots/topological_charge_publication"
+    dir2 = "../output/plots/topological_charge"
     isdir(dir1) || mkdir(dir1)
     isdir(dir2) || mkdir(dir2)
 
