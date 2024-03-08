@@ -39,6 +39,6 @@ for i in eachindex(files)
     plot!(plt1,size=(800,300),plot_title=title)  
     plot!(plt2,plot_title=basename(file))
 
-    savefig(joinpath(dir1,basename(file)*".pdf"))
-    savefig(joinpath(dir2,basename(file)*".pdf"))
+    savefig(plt1,joinpath(dir1,basename(file)*".pdf"))
+    savefig(plt2,joinpath(dir2,basename(file)*".pdf"))
 end
