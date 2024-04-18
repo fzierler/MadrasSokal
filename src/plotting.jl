@@ -26,7 +26,7 @@ function publication_plot(obs,obslabel,therm;thermstep=1,minlags=100,kws...)
     # Assume scalar variable
     # Determine a suitable n_therm by looking at τ as a function 
     # of the thermalisation cut, as well as a histogram of the plaquette
-    therms = collect(1:thermstep:length(obs)÷2)
+    therms = collect(1:thermstep:3length(obs)÷4)
     τ_therm, Δτ_therm = madras_sokal_time(obs,therms)
     
     # If therm is too large use the maximal value of thermstep
@@ -53,7 +53,7 @@ function autocorrelation_overview(obs,obslabel,therm;thermstep=1,minlags=100,wit
     # Assume scalar variable
     # Determine a suitable n_therm by looking at τ as a function 
     # of the thermalisation cut, as well as a histogram of the plaquette
-    therms = collect(1:thermstep:length(obs)÷2)
+    therms = collect(1:thermstep:3length(obs)÷4)
     τ_therm, Δτ_therm = madras_sokal_time(obs,therms)
     
     # If therm is too large use the maximal value of thermstep
