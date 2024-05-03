@@ -76,12 +76,13 @@ function autocorrelation_overview(obs,obslabel,therm;thermstep=1,minlags=100,wit
 
     thermlabel = L"n_{therm}=%$therm"
     τlabel = L"τ_{\rm MS}=%$(round(τmax,digits=1)) \pm %$(round(Δτmax,digits=1))"
-
+    histogram_label = "$obslabel = $(errorstring(mean(o),std(o)./sqrt(length(o))))"
+    
     plt0 = plot(therms, τ_therm, ribbon = Δτ_therm, label="", xlabel=L"n_{\rm therm}", ylabel=L"\tau_{\rm MS}" )
     vline!(plt0,[therm],label=thermlabel,legend=:topright)
     scatter!(plt0,[therm],[τmax],label=τlabel)
     plt1 = serieshistogram(o,ylims=extrema(o),title="")
-    plt2 = fit_histogram_plot(o,xlabel=obslabel,ylabel="count",lw=2,color=:red)
+    plt2 = fit_histogram_plot(o,xlabel=obslabel,ylabel="count",lw=2,color=:red,label=histogram_label)
     plt3 = plot(τ, ribbon = Δτ,label="",xlabel=L"window size $W$", ylabel=L"\tau_{\rm MS}")
     scatter!(plt3,[W],[τmax],label=τlabel)
     

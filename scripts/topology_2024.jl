@@ -3,6 +3,7 @@ using MadrasSokal
 using Plots
 using Distributions
 using LaTeXStrings
+using Statistics
 using DelimitedFiles
 include("tools.jl")
 gr(fontfamily="Computer Modern", frame=:box, top_margin=4Plots.mm, left_margin=4Plots.mm)
@@ -10,7 +11,8 @@ gr(tickfontsize=10,labelfontsize=12,titlefontsize=14)
 
 # output from DiaL
 files   = readdir("../flow_analysis/outputDiaLTests",join=true)
-therms  = [200,100,100,100,600]
+therms  = [200,100,100,100,500]
+nskip   = 5
 
 for i in eachindex(files)
     file  = files[i]
@@ -18,7 +20,8 @@ for i in eachindex(files)
 
     data = readdlm(files[i],',';skipstart=1)
     cfgn, Q = Int.(data[:,1]), data[:,2]
-    
+    Q = Q[1:nskip:end]
+
     obslabel = L"Q"
     title = "" #latexstring(L"\beta = %$(β[i]), ~~ T \times L^3 = %$(T[i]) \times %$(L[i])^3")
 
