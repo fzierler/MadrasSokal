@@ -24,6 +24,7 @@ function exponential_autocorrelation_time(O;minlags=0)
     # discard autocorrelation(t=0)=1 in fitting
     a = autocorrelation(O;minlags)[2:end]
     @. modelτ(x,p) = exp(-x/p[1])
+    @show extrema(a)
     # we have previosuly discarded the data point at t=0
     x = collect(1:length(a))
     c = curve_fit(modelτ, x, a, ones(1))

@@ -68,7 +68,11 @@ function autocorrelation_overview(obs,obslabel,therm;thermstep=1,minlags=100,wit
     if with_exponential
         τexp = zeros(length(therms))
         for (i,t) in enumerate(therms)
-            τexp[i] = exponential_autocorrelation_time(obs[t:end];minlags)
+            try
+                τexp[i] = exponential_autocorrelation_time(obs[t:end];minlags)
+            catch
+                τexp[i] = NaN
+            end
         end
         τexp_therm = exponential_autocorrelation_time(obs[therm:end];minlags)
         τlabelEXP = L"τ_{\rm exp}=%$(round(τexp_therm,digits=1))" # \pm %$(round(Δτmax,digits=1))"

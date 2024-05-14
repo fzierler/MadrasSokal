@@ -17,8 +17,12 @@ end
 dir = "/home/fabian/Documents/DataDiaL/PlaquettesNew/plaqs"
 obslabel = L"\langle P ~ \rangle"
 
-therms = [10,10,500,500,500,300,300,2000,2000,300,300,10,10]
 files  = readdir(dir,join=true)
+filter!(x->!contains(x,"nl16"),files)
+filter!(x->!contains(x,"nl20"),files)
+
+therms = 10*ones(Int,length(files))
+
 
 for (i,file) in enumerate(files)
     therm = therms[i]
