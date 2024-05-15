@@ -12,9 +12,6 @@ function fit_histogram_plot!(plt,data;integergbins=false,orientation=:v,l1="",l2
     else
         bins = :auto
     end
-    @show integergbins
-    @show bins
-
     # plot histogram and overlay fit
     if orientation == :v
         histogram!(plt,data,normalize=true,label="";orientation=:v,bins=bins)
