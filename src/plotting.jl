@@ -1,21 +1,30 @@
 fit_histogram_plot(data;kws...) = fit_histogram_plot!(plot(),data;kws...) 
-function fit_histogram_plot!(plt,data;orientation=:v,l1="",l2="",kws...)
+function fit_histogram_plot!(plt,data;integergbins=false,orientation=:v,l1="",l2="",kws...)
     # Fit plaquette to a Normal Distributions
     d = fit(Normal, data)
     # set up plot range for dsitribution
     lo, hi = quantile.(d, [0.001, 0.999])
     x = range(lo, hi; length = 100)
+    # determine bins for integer binning for topology
+    if integergbins
+        lo, hi = extrema(data)
+        bins = collect(floor(lo)-1:1:ceil(hi)+1)
+    else
+        bins = :auto
+    end
+    @show integergbins
+    @show bins
 
     # plot histogram and overlay fit
     if orientation == :v
-        histogram!(plt,data,normalize=true,label="";orientation=:v)
+        histogram!(plt,data,normalize=true,label="";orientation=:v,bins=bins)
         plot!(plt, x, pdf.(d,x), label="";kws...)
         # hack in the autocorrelation times
         plot!(plt,[missing],[missing],label=l1,lc=:white)
         plot!(plt,[missing],[missing],label=l2,lc=:white)
     else
         xl = ylims(histogram(data,normalize=true))
-        histogram!(plt,data,normalize=true,label="",orientation=:h)
+        histogram!(plt,data,normalize=true,label="",orientation=:h,bins=bins)
         plot!(plt,[missing],[missing],label=l1,lc=:white)
         plot!(plt,[missing],[missing],label=l2,lc=:white)
         plot!(plt, pdf.(d,x), x, label="";ylims=(lo,hi), xlims=xl, kws...)
@@ -49,7 +58,7 @@ function publication_plot(obs,obslabel,therm;thermstep=1,minlags=100,kws...)
     plt = plot(plt1,plt2,link=:y,layout=grid(1,2,widths = [0.7,0.3]);kws...)
     return plt, τmax, Δτmax, τexp
 end 
-function autocorrelation_overview(obs,obslabel,therm;thermstep=1,minlags=100,with_exponential=false,kws...)
+function autocorrelation_overview(obs,obslabel,therm;integergbins=false,thermstep=1,minlags=100,with_exponential=false,kws...)
     # Assume scalar variable
     # Determine a suitable n_therm by looking at τ as a function 
     # of the thermalisation cut, as well as a histogram of the plaquette
@@ -86,7 +95,7 @@ function autocorrelation_overview(obs,obslabel,therm;thermstep=1,minlags=100,wit
     vline!(plt0,[therm],label=thermlabel,legend=:topright)
     scatter!(plt0,[therm],[τmax],label=τlabel)
     plt1 = serieshistogram(o,ylims=extrema(o),title="")
-    plt2 = fit_histogram_plot(o,xlabel=obslabel,ylabel="count",lw=2,color=:red,label=histogram_label)
+    plt2 = fit_histogram_plot(o,xlabel=obslabel,ylabel="count",lw=2,color=:red,label=histogram_label;integergbins)
     plt3 = plot(τ, ribbon = Δτ,label="",xlabel=L"window size $W$", ylabel=L"\tau_{\rm MS}")
     scatter!(plt3,[W],[τmax],label=τlabel)
     

@@ -11,8 +11,8 @@ gr(tickfontsize=10,labelfontsize=12,titlefontsize=14)
 
 # output from DiaL
 files   = readdir("../flow_analysis/outputDiaLTests",join=true)
-therms  = [200,100,100,100,500]
-nskip   = 5
+therms  = 100*ones(Int,length(files))
+nskip   = 1
 
 for i in eachindex(files)
     file  = files[i]
@@ -26,7 +26,7 @@ for i in eachindex(files)
     title = "" #latexstring(L"\beta = %$(β[i]), ~~ T \times L^3 = %$(T[i]) \times %$(L[i])^3")
 
     plt1,τmax,τexp = MadrasSokal.publication_plot(Q,obslabel,therm)
-    plt2 = autocorrelation_overview(Q,obslabel,therm;with_exponential=true)
+    plt2 = autocorrelation_overview(Q,obslabel,therm;with_exponential=true,integergbins=true)
     
     plot!(plt1,size=(800,300),plot_title=title)  
     plot!(plt2,plot_title=basename(file))

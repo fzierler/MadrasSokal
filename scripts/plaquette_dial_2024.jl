@@ -3,7 +3,7 @@ using MadrasSokal
 using Plots
 
 files  = readdir("../flow_analysis/outputDiaLTests",join=true) 
-therms  = [200,100,100,100,500]
+therms  = 100*ones(Int,length(files))
 nskip   = 1
 
 
@@ -24,6 +24,8 @@ for (i,file) in enumerate(files)
     plt1,τmax,τexp = MadrasSokal.publication_plot(plaq,"<P>",therm)
     plt2 = autocorrelation_overview(plaq,"<P>",therm;with_exponential=true)
     #display(plt1)
+
+    plot!(plt2,plot_title=basename(file))
     display(plt2)
 
 end
