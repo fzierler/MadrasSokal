@@ -13,9 +13,9 @@ println("Topological charge autocorrelation...")
 files = readdir("../output/flow_analysis",join=true) 
 param = readdlm("../output/tables/table1_machine_readable.csv",',',skipstart=1)
 
-T = Int.(param[:,2])
-L = Int.(param[:,3])
-β = param[:,1]
+β = param[:,2]
+T = Int.(param[:,3])
+L = Int.(param[:,4])
 
 for i in eachindex(files)
     file  = files[i]

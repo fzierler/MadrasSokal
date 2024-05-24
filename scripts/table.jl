@@ -10,8 +10,16 @@ io1 = open("../output/tables/table1_machine_readable.csv","w")
 io2 = open("../output/tables/table1_human_readable.csv","w")
 io3 = open("../output/tables/table1.tex","w")
 
-write(io1,"beta,T,L,mf,mas,ω0,Δω0,p,Δp,Q,ΔQ,first,last,skip,Nconf\n")
-write(io2,"beta,mas,mf,Nt,Nl,first,skip,Nconf,p,ω0,τ(Q),Q\n")
+write(io1,"ensemble,beta,T,L,mf,mas,ω0,Δω0,p,Δp,Q,ΔQ,first,last,skip,Nconf\n")
+write(io2,"ensemble,beta,mas,mf,Nt,Nl,first,skip,Nconf,p,ω0,τ(Q),Q\n")
+
+function ensemble_name(T,mf)
+    T == 48 && return "M1"
+    T == 64 && isapprox(mf,-0.71) && return "M2"
+    T == 96 && return "M3"
+    T == 64 && isapprox(mf,-0.70) && return "M4"
+    T == 64 && isapprox(mf,-0.72) && return "M5"
+end
 
 for file in files
     T, L, beta, mf,  mas = parse_filename(file)
@@ -32,10 +40,12 @@ for file in files
     # calculate autocorrelation times
     τP, ΔτP = madras_sokal_time(plaq)
     τQ, ΔτQ = madras_sokal_time(topo)
+    # get ensemble name 
+    MX = ensemble_name(T,mf)
     # write to csv file
-    write(io1,"$beta,$T,$L,$mf,$mas,$ω0,$Δω0,$p,$Δp,$Q,$ΔQ,$Nfirst,$Nlast,$Nskip,$Nconf\n")
-    write(io2,"$beta,$mas,$mf,$T,$L,$Nfirst,$Nskip,$Nconf,$(errorstring(p,Δp)),$(errorstring(ω0,Δω0)),$(errorstring(τQ,ΔτQ)),$(errorstring(Q,ΔQ))\n")
-    write(io3,"$beta & $mas & $mf & $T & $L & $Nfirst & $Nskip & $Nconf & $(errorstring(p,Δp)) & $(errorstring(ω0,Δω0)) & $(errorstring(τQ,ΔτQ)) & $(errorstring(Q,ΔQ))\\\\ \n")
+    write(io1,"$MX,$beta,$T,$L,$mf,$mas,$ω0,$Δω0,$p,$Δp,$Q,$ΔQ,$Nfirst,$Nlast,$Nskip,$Nconf\n")
+    write(io2,"$MX,$beta,$mas,$mf,$T,$L,$Nfirst,$Nskip,$Nconf,$(errorstring(p,Δp)),$(errorstring(ω0,Δω0)),$(errorstring(τQ,ΔτQ)),$(errorstring(Q,ΔQ))\n")
+    write(io3,"$MX & $beta & $mas & $(rpad(mf,5,'0')) & $T & $L & $Nfirst & $Nskip & $Nconf & $(errorstring(p,Δp)) & $(errorstring(ω0,Δω0)) & $(errorstring(τQ,ΔτQ)) & $(errorstring(Q,ΔQ))\\\\ \n")
 end
 
 close(io1)

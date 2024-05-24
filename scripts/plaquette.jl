@@ -12,10 +12,10 @@ println("Plaquette autocorrelation...")
 files  = readdir("../input/plaquettes",join=true) 
 param = readdlm("../output/tables/table1_machine_readable.csv",',',skipstart=1)
 
-therms = Int.(param[:,12])
-T = Int.(param[:,2])
-L = Int.(param[:,3])
-β = param[:,1]
+therms = Int.(param[:,13])
+T = Int.(param[:,3])
+L = Int.(param[:,4])
+β = param[:,2]
 
 for i in eachindex(files)
     file = files[i]
