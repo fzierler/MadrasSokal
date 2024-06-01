@@ -14,15 +14,16 @@ function _parse_filename(filename)
     return β, mf, mas, T, L
 end
 
-dir = "/home/fabian/Documents/DataDiaL/PlaquettesNew/plaqs"
+dir = "/home/fabian/Dokumente/DataDiaL/PlaquettesTursa/plaqs"
 obslabel = L"\langle P ~ \rangle"
 
 files  = readdir(dir,join=true)
+
 filter!(x->!contains(x,"nl16"),files)
 filter!(x->!contains(x,"nl20"),files)
-
-therms = 10*ones(Int,length(files))
-
+filter!(x->!contains(x,"nl32"),files)
+filter!(x->!contains(x,"b6p45"),files)
+therms = 500*ones(Int,length(files))
 
 for (i,file) in enumerate(files)
     therm = therms[i]
