@@ -10,8 +10,9 @@ gr(fontfamily="Computer Modern", frame=:box, top_margin=4Plots.mm, left_margin=4
 gr(tickfontsize=10,labelfontsize=12,titlefontsize=14)
 
 # output from DiaL
+files   = readdir("../flow_analysis/outputDiaL_beta6p45",join=true)
 files   = readdir("../flow_analysis/outputDiaLTests",join=true)
-therms  = 100*ones(Int,length(files))
+therms  = 1*ones(Int,length(files))
 nskip   = 1
 
 for i in eachindex(files)
@@ -20,7 +21,7 @@ for i in eachindex(files)
 
     data = readdlm(files[i],',';skipstart=1)
     cfgn, Q = Int.(data[:,1]), data[:,2]
-    Q = Q[1:nskip:end]
+    Q = Q[therm:nskip:end]
 
     obslabel = L"Q"
     title = "" #latexstring(L"\beta = %$(β[i]), ~~ T \times L^3 = %$(T[i]) \times %$(L[i])^3")
