@@ -1,8 +1,8 @@
 using DelimitedFiles
 using MadrasSokal
 
-files  = readdir("../flow_analysis/outputDiaL",join=true) 
 files  = readdir("../flow_analysis/outputDiaLTests",join=true) 
+files  = readdir("../flow_analysis/outputDiaL",join=true) 
 
 io1 = open("output/table.csv","w")
 io2 = open("output/tableHR.csv","w")
@@ -37,8 +37,8 @@ for file in files
     τexpQ = exponential_autocorrelation_time(topo)
     # write to csv file
     write(io1,"$beta,$T,$L,$mf,$mas,$ω0,$Δω0,$p,$Δp,$Q,$ΔQ,$Nfirst,$Nlast,$Nskip,$Nconf,$τQ,$ΔτQ,$τP,$ΔτP,$τexpP\n")
-    write(io2,"$beta,$mas,$mf,$T,$L,$Nfirst,$Nskip,$Nconf,$(errorstring(p,Δp)),$(errorstring(ω0,Δω0)),$(errorstring(τQ,ΔτQ)),$(errorstring(Q,ΔQ)),$(errorstring(τP,ΔτP)),$τexpP)\n")
-    write(io3,"$beta & $mas & $mf & $T & $L & $Nfirst & $Nskip & $Nconf & $(errorstring(p,Δp)) & $(errorstring(ω0,Δω0)) & $(errorstring(τQ,ΔτQ)) & $(errorstring(Q,ΔQ))\\\\ \n")
+    write(io2,"$beta,$mas,$mf,$T,$L,$Nfirst,$Nskip,$Nconf,$(errorstring(p,Δp)),$(errorstring(ω0,Δω0)),$(errorstring(τQ,ΔτQ)),$(errorstring(Q,ΔQ)),$(errorstring(τP,ΔτP)),$(round(τexpP,sigdigits=2))\n")
+    write(io3,"$beta & $mas & $mf & $T & $L &  $Nconf & $(errorstring(ω0,Δω0)) & $(errorstring(τQ,ΔτQ)) & $(errorstring(Q,ΔQ)) & $(errorstring(τP,ΔτP)) & $(round(τexpP,sigdigits=2)) \\\\ \n")
     write(io4,"$beta,$T,$L,$mf,$mas,$Nconf,$Nfirst-$Nskip-$Nlast,$τexpP,$τP,$ΔτP,$τQ,$ΔτQ,$Q,$ΔQ,$ω0,$Δω0\n")
 
 end
