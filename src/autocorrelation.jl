@@ -10,7 +10,7 @@ end
 # With the default maximal window size tmax=length(x)÷10,  
 # the Madras-Sokal variance estimate is such that at tmax
 # Δτ ÷ τ = 1/sqrt(2.5) ≈ 0.63
-function madras_sokal_estimator_windows(x;max_window=length(x)÷10)
+function madras_sokal_estimator_windows(x;max_window=length(x)÷20)
     Γ = zeros(eltype(x),max_window)
     for t in 1:max_window
         Γ[t] = madras_sokal_estimator_fixedt(x, t)

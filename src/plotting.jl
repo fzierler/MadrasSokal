@@ -81,7 +81,7 @@ function autocorrelation_overview(obs,obslabel,therm;integergbins=false,thermste
             end
         end
         τexp_therm = exponential_autocorrelation_time(obs[therm:end];minlags)
-        τlabelEXP = L"τ_{\rm exp}=%$(round(τexp_therm,digits=1))" # \pm %$(round(Δτmax,digits=1))"
+        τlabelEXP = L"τ_{\rm exp}=%$(round(τexp_therm,digits=2))" # \pm %$(round(Δτmax,digits=1))"
     end
 
     thermlabel = L"n_{therm}=%$therm"

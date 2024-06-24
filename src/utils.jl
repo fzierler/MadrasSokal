@@ -44,6 +44,18 @@ function plaquettes_tursa(file)
     plaquettes = getindex(plaquettes,inds)
     return configurations, plaquettes
 end
+function plaquettes_hirep(file)
+    plaquettes = Float64[]
+    for line in eachline(file)
+        if occursin("Plaquette",line)
+            line = replace(line,"="=>" ")
+            line = replace(line,":"=>" ")
+            p = parse(Float64,split(line)[end])
+            append!(plaquettes,p)
+        end
+    end
+    return plaquettes
+end
 function errorstring(x,Δx;nsig=2)
     @assert Δx > 0
     sgn = x < 0 ? "-" : ""
