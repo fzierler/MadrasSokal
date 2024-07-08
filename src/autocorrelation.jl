@@ -1,11 +1,14 @@
-function madras_sokal_estimator_fixedt(x, t)
-    m = mean(x)
+function madras_sokal_estimator_fixedt(x, t;biased = false)
     Γ = zero(eltype(x))
     N = length(x)
+    m = mean(x)
+    v = var(x)
+    τ = t - 1
     for i in 1:N-t
-        Γ += (x[i]-m)*(x[i+t]-m)/(N-t)
+        norm = biased ? N : N-τ            
+        Γ += (x[i]-m)*(x[i+τ]-m)/ norm / v
     end
-    return Γ 
+    return Γ
 end
 # With the default maximal window size tmax=length(x)÷10,  
 # the Madras-Sokal variance estimate is such that at tmax
@@ -19,7 +22,7 @@ function madras_sokal_estimator_windows(x;max_window=length(x)÷10)
 end
 function madras_sokal_windows(x;kws...)
     Γ  = madras_sokal_estimator_windows(x;kws...)
-    τ  = 1/2 .+ cumsum(Γ/Γ[1])
+    τ  = 1/2 .+ cumsum(Γ)
     Δτ = similar(τ)
     N  = length(x)
     for i in eachindex(τ)
