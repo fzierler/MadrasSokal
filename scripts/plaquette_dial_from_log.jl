@@ -24,4 +24,4 @@ for file in files
         
     end
 end
-display(plt1)
+#display(plt1)

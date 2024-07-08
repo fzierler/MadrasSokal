@@ -11,7 +11,7 @@ io4 = open("output/tableGoogleDoc.csv","w")
 
 write(io1,"beta,T,L,mf,mas,ω0,Δω0,p,Δp,Q,ΔQ,first,last,skip,Nconf,τ(Q),Δτ(Q),τ(P),Δτ(P),τexp(P),Δτexp(P)\n")
 write(io2,"beta,mas,mf,Nt,Nl,first,skip,Nconf,p,ω0,τ(Q),Q,τ(P),τexp(P)\n")
-write(io4,"beta,T,L,mf,mas,Nconf,first-skip-last,τexp(P),τ(P),Δτ(P),τ(Q),Δτ(Q),Q,ΔQ,ω0,Δω0\n")
+write(io4,"beta,T,L,mf,mas,Nconf,first-skip-last,τexp(P),τ(P),Δτ(P),τexp(Q),τ(Q),Δτ(Q),Q,ΔQ,ω0,Δω0\n")
 
 for file in files
     T, L, beta, mf,  mas = parse_filename(file)
@@ -39,7 +39,7 @@ for file in files
     write(io1,"$beta,$T,$L,$mf,$mas,$ω0,$Δω0,$p,$Δp,$Q,$ΔQ,$Nfirst,$Nlast,$Nskip,$Nconf,$τQ,$ΔτQ,$τP,$ΔτP,$τexpP\n")
     write(io2,"$beta,$mas,$mf,$T,$L,$Nfirst,$Nskip,$Nconf,$(errorstring(p,Δp)),$(errorstring(ω0,Δω0)),$(errorstring(τQ,ΔτQ)),$(errorstring(Q,ΔQ)),$(errorstring(τP,ΔτP)),$(round(τexpP,sigdigits=2))\n")
     write(io3,"$beta & $mas & $mf & $T & $L &  $Nconf & $(errorstring(ω0,Δω0)) & $(errorstring(τQ,ΔτQ)) & $(errorstring(Q,ΔQ)) & $(errorstring(τP,ΔτP)) & $(round(τexpP,sigdigits=2)) \\\\ \n")
-    write(io4,"$beta,$T,$L,$mf,$mas,$Nconf,$Nfirst-$Nskip-$Nlast,$τexpP,$τP,$ΔτP,$τQ,$ΔτQ,$Q,$ΔQ,$ω0,$Δω0\n")
+    write(io4,"$beta,$T,$L,$mf,$mas,$Nconf,$Nfirst-$Nskip-$Nlast,$τexpP,$τP,$ΔτP,$τexpQ,$τQ,$ΔτQ,$Q,$ΔQ,$ω0,$Δω0\n")
 
 end
 
