@@ -1,15 +1,14 @@
 using Pkg; Pkg.activate(".")
 using MadrasSokal
 using Plots
-using Distributions
 using LaTeXStrings
 using DelimitedFiles
-include("tools.jl")
-gr(fontfamily="Computer Modern", frame=:box, top_margin=4Plots.mm, left_margin=4Plots.mm)
-gr(tickfontsize=10,labelfontsize=12,titlefontsize=14)
+using PGFPlotsX
+gr(fontfamily="Computer Modern", frame=:box, top_margin=4Plots.mm, left_margin=4Plots.mm, tickfontsize=10,labelfontsize=12,titlefontsize=14)
 
-# output from DiaL
-files   = readdir("../flow_analysis/outputDiaL",join=true) 
+files   = readdir("../flow_analysis/output/DiaL3",join=true) 
+ispath("output") || mkpath("output")
+
 outfile = joinpath("output","topology.csv")
 io      = open(outfile,"w")
 write(io,"beta,am0f,am0as,Nt,Ns,Nconf,w0,Delta_w0,Q,Delta_Q,τint_Q,Delta_τint_Q\n")
@@ -18,18 +17,20 @@ using DelimitedFiles
 
 for i in eachindex(files)
     file = files[i]
-    therm = therms[i] 
+    therm = 1
+    @show file
+    T, L, β, mf,  mas = parse_filename(file)
 
     data = readdlm(files[i],',';skipstart=1)
     cfgn, Q = Int.(data[:,1]), data[:,2]
     
     obslabel = L"Q"
-    title = latexstring(L"\beta = %$(β[i]), ~~ T \times L^3 = %$(T[i]) \times %$(L[i])^3")
+    title = latexstring(L"\beta = %$(β), ~~ T \times L^3 = %$(T) \times %$(L)^3")
 
     dir1 = "plots/topology_publication"
     dir2 = "plots/dial_topological_charge"
-    isdir(dir1) || mkdir(dir1)
-    isdir(dir2) || mkdir(dir2)
+    ispath(dir1) || mkpath(dir1)
+    ispath(dir2) || mkpath(dir2)
 
     plt1,τmax,τexp = MadrasSokal.publication_plot(Q,obslabel,therm)
     plt2 = autocorrelation_overview(Q,obslabel,therm;with_exponential=true)
