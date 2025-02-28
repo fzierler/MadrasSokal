@@ -9,6 +9,11 @@ gr(fontfamily="Computer Modern", frame=:box, top_margin=4Plots.mm, left_margin=4
 files   = readdir("../flow_analysis/output/DiaL3",join=true) 
 ispath("output") || mkpath("output")
 
+dir1 = "plots/topology_publication"
+dir2 = "plots/dial_topological_charge"
+ispath(dir1) || mkpath(dir1)
+ispath(dir2) || mkpath(dir2)
+
 outfile = joinpath("output","topology.csv")
 io      = open(outfile,"w")
 write(io,"beta,am0f,am0as,Nt,Ns,Nconf,w0,Delta_w0,Q,Delta_Q,τint_Q,Delta_τint_Q\n")
@@ -20,23 +25,19 @@ for i in eachindex(files)
     therm = 1
     @show file
     T, L, β, mf,  mas = parse_filename(file)
-
+    @show T, L, β, mf,  mas
+    
     data = readdlm(files[i],',';skipstart=1)
     cfgn, Q = Int.(data[:,1]), data[:,2]
     
     obslabel = L"Q"
     title = latexstring(L"\beta = %$(β), ~~ T \times L^3 = %$(T) \times %$(L)^3")
 
-    dir1 = "plots/topology_publication"
-    dir2 = "plots/dial_topological_charge"
-    ispath(dir1) || mkpath(dir1)
-    ispath(dir2) || mkpath(dir2)
-
     plt1,τmax,τexp = MadrasSokal.publication_plot(Q,obslabel,therm)
     plt2 = autocorrelation_overview(Q,obslabel,therm;with_exponential=true)
     
     plot!(plt1,size=(800,300),plot_title=title)  
-    plot!(plt2,plot_title=basename(file))
+    plot!(plt2,plot_title=title)
 
     savefig(joinpath(dir1,basename(file)*".pdf"))
     savefig(joinpath(dir2,basename(file)*".pdf"))
