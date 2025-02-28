@@ -16,10 +16,11 @@ function topology_plaquette_from_files(file; outdir = "./output/plots",  therm =
     f = h5open(file)
     for ens in keys(f)
 
-        cfgn, Q = read(f[ens],"trajectories"), read(f[ens],"Q")
+        cfgn, Q, plaq = read(f[ens],"trajectories"), read(f[ens],"Q"), read(f[ens],"plaquette")
+        Esym, Eplaq = read(f[ens],"energy_density_w0_sym"), read(f[ens],"energy_density_w0_plaq")
                 
-        plt1,τmax,τexp = MadrasSokal.publication_plot(Q,"Q",therm)
-        plt2 = autocorrelation_overview(Q,"Q",therm;with_exponential=true)
+        plt1,τmax,τexp = MadrasSokal.publication_plot(cfgn,Q,"Q",therm)
+        plt2 = autocorrelation_overview(cfgn, Q,"Q",therm;with_exponential=true)
         
         T, L, β, mf,  mas = parse_filename(ens)
         title = latexstring(L"\beta\!=\!%$(β),~ T\!\times\!L^3\!=\!\!%$(T)\!\times\!%$(L)^3,-\!(am_0^{\rm f},am_0^{\rm as})\!=\!(%$(abs(mf)),%$(abs(mas)))")

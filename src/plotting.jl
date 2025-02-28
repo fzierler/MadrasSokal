@@ -28,7 +28,7 @@ function fit_histogram_plot!(plt,data;integergbins=false,orientation=:v,l1="",l2
     end
     return plt
 end
-function publication_plot(obs,obslabel,therm;thermstep=1,minlags=100,kws...)
+function publication_plot(x,obs,obslabel,therm;thermstep=1,minlags=100,kws...)
     # Assume scalar variable
     # Determine a suitable n_therm by looking at τ as a function 
     # of the thermalisation cut, as well as a histogram of the plaquette
@@ -38,6 +38,7 @@ function publication_plot(obs,obslabel,therm;thermstep=1,minlags=100,kws...)
     # If therm is too large use the maximal value of thermstep
     therm = min(maximum(therms),therm)
     o = obs[therm:end]
+    x = x[therm:end]
     
     τ, Δτ = madras_sokal_windows(o)
     τmax, W = findmax(τ)
@@ -46,14 +47,14 @@ function publication_plot(obs,obslabel,therm;thermstep=1,minlags=100,kws...)
     l1 = L"τ_{\rm int}=%$(round(τmax,digits=1))"
     l2 = L"(τ_{\rm exp}=%$(round(τexp,digits=1)))"
 
-    plt1 = plot(therm:therm+length(o)-1,o ; ylabel=latexstring(obslabel), label="") 
+    plt1 = plot(x, o ; ylabel=latexstring(obslabel), label="", xlabel="trajectory") 
     plt2 = fit_histogram_plot(o,lw=2,color=:red;l1,l2)
     plt2 = fit_histogram_plot(o,orientation=:h,lw=2,color=:red;l1,l2)
     plot!(plt1,ylims=ylims(plt2))
     plt = plot(plt1,plt2,link=:y,layout=grid(1,2,widths = [0.7,0.3]);kws...)
     return plt, τmax, Δτmax, τexp
 end 
-function autocorrelation_overview(obs,obslabel,therm;integergbins=false,thermstep=1,minlags=100,with_exponential=false,kws...)
+function autocorrelation_overview(x,obs,obslabel,therm;integergbins=false,thermstep=1,minlags=100,with_exponential=false,kws...)
     # Assume scalar variable
     # Determine a suitable n_therm by looking at τ as a function 
     # of the thermalisation cut, as well as a histogram of the plaquette
@@ -63,6 +64,7 @@ function autocorrelation_overview(obs,obslabel,therm;integergbins=false,thermste
     # If therm is too large use the maximal value of thermstep
     therm = min(maximum(therms),therm)
     o = obs[therm:end]
+    x = x[therm:end]
     
     τ, Δτ = madras_sokal_windows(o)
     τmax, W = findmax(τ)
@@ -89,7 +91,7 @@ function autocorrelation_overview(obs,obslabel,therm;integergbins=false,thermste
     plt0 = plot(therms, τ_therm, ribbon = Δτ_therm, label="", xlabel=L"n_{\rm therm}", ylabel=L"\tau_{\rm MS}" )
     vline!(plt0,[therm],label=thermlabel,legend=:topright)
     scatter!(plt0,[therm],[τmax],label=τlabel)
-    plt1 = serieshistogram(o,ylims=extrema(o),title="",ylabel12=obslabel,xlabel1=L"n_{meas}",xlabel2="count")
+    plt1 = serieshistogram(x,o,ylims=extrema(o),title="",ylabel12=obslabel,xlabel1=L"n_{meas}",xlabel2="count")
     plt2 = fit_histogram_plot(o,xlabel=obslabel,ylabel="count",lw=2,color=:red,label=histogram_label;integergbins)
     plt3 = plot(τ, ribbon = Δτ,label="",xlabel=L"window size $W$", ylabel=L"\tau_{\rm MS}")
     scatter!(plt3,[W],[τmax],label=τlabel)
