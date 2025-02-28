@@ -4,7 +4,7 @@
 
 @userplot SeriesHistogram    # defines a plotting function called "SeriesHistogram"
 
-@recipe function f(h::SeriesHistogram; xlabel1 = "", xlabel2 = "") # define extra keywords to use in the plotting
+@recipe function f(h::SeriesHistogram; ylabel12 = "", xlabel1 = "", xlabel2 = "") # define extra keywords to use in the plotting
     mat = h.args      # the data to be plotted are stored in the args array
 
     legend := false       # specify the plot attributes
@@ -27,7 +27,7 @@
     linealpha --> 1.0    # this (specifying the opacity of the line) can be overridden by the user
     seriestype := :path
     xguide := xlabel1
-    yguide := ""
+    yguide := ylabel12
     mat                 # the recipe returns the data to be plotted
 end
 

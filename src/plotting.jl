@@ -46,7 +46,7 @@ function publication_plot(obs,obslabel,therm;thermstep=1,minlags=100,kws...)
     l1 = L"τ_{\rm int}=%$(round(τmax,digits=1))"
     l2 = L"(τ_{\rm exp}=%$(round(τexp,digits=1)))"
 
-    plt1 = plot(therm:therm+length(o)-1,o ; ylabel=obslabel, label="") 
+    plt1 = plot(therm:therm+length(o)-1,o ; ylabel=latexstring(obslabel), label="") 
     plt2 = fit_histogram_plot(o,lw=2,color=:red;l1,l2)
     plt2 = fit_histogram_plot(o,orientation=:h,lw=2,color=:red;l1,l2)
     plot!(plt1,ylims=ylims(plt2))
@@ -89,7 +89,7 @@ function autocorrelation_overview(obs,obslabel,therm;integergbins=false,thermste
     plt0 = plot(therms, τ_therm, ribbon = Δτ_therm, label="", xlabel=L"n_{\rm therm}", ylabel=L"\tau_{\rm MS}" )
     vline!(plt0,[therm],label=thermlabel,legend=:topright)
     scatter!(plt0,[therm],[τmax],label=τlabel)
-    plt1 = serieshistogram(o,ylims=extrema(o),title="")
+    plt1 = serieshistogram(o,ylims=extrema(o),title="",ylabel12=obslabel,xlabel1=L"n_{meas}",xlabel2="count")
     plt2 = fit_histogram_plot(o,xlabel=obslabel,ylabel="count",lw=2,color=:red,label=histogram_label;integergbins)
     plt3 = plot(τ, ribbon = Δτ,label="",xlabel=L"window size $W$", ylabel=L"\tau_{\rm MS}")
     scatter!(plt3,[W],[τmax],label=τlabel)
