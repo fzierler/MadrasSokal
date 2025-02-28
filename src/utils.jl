@@ -1,6 +1,8 @@
 function parse_filename(file)
-    str = replace(file,r"[a-z,A-Z,/,_]"=>" ",".."=>" ")
-    val = parse.(Float64,split(str))[2:end]
+    s   = basename(file)
+    rx  = r"Lt([0-9]+)Ls([0-9]+)beta([0-9]+\.[0-9]+)mf([0-9]+\.[0-9]+)mas([0-9]+\.[0-9]+)"
+    str = match(rx,s).captures
+    val = parse.(Float64,str)
     T, L, beta, mf,  mas = Int(val[1]), Int(val[2]), val[3], -val[4], -val[5]
     return T, L, beta, mf,  mas
 end

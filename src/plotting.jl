@@ -48,9 +48,7 @@ function publication_plot(obs,obslabel,therm;thermstep=1,minlags=100,kws...)
 
     plt1 = plot(therm:therm+length(o)-1,o ; ylabel=obslabel, label="") 
     plt2 = fit_histogram_plot(o,lw=2,color=:red;l1,l2)
-    #display(plt2)
     plt2 = fit_histogram_plot(o,orientation=:h,lw=2,color=:red;l1,l2)
-    #display(plt2)
     plot!(plt1,ylims=ylims(plt2))
     plt = plot(plt1,plt2,link=:y,layout=grid(1,2,widths = [0.7,0.3]);kws...)
     return plt, τmax, Δτmax, τexp
@@ -81,12 +79,12 @@ function autocorrelation_overview(obs,obslabel,therm;integergbins=false,thermste
             end
         end
         τexp_therm = exponential_autocorrelation_time(obs[therm:end];minlags)
-        τlabelEXP = L"τ_{\rm exp}=%$(round(τexp_therm,digits=2))" # \pm %$(round(Δτmax,digits=1))"
+        τlabelEXP = L"τ_{\rm exp}=%$(round(τexp_therm,digits=2))"
     end
 
     thermlabel = L"n_{therm}=%$therm"
     τlabel = L"τ_{\rm MS}=%$(round(τmax,digits=1)) \pm %$(round(Δτmax,digits=1))"
-    histogram_label = "$obslabel = $(errorstring(mean(o),std(o)./sqrt(length(o))))"
+    histogram_label = L"%$obslabel = %$(errorstring(mean(o),std(o)./sqrt(length(o))))"
     
     plt0 = plot(therms, τ_therm, ribbon = Δτ_therm, label="", xlabel=L"n_{\rm therm}", ylabel=L"\tau_{\rm MS}" )
     vline!(plt0,[therm],label=thermlabel,legend=:topright)

@@ -4,41 +4,31 @@ using Plots
 using LaTeXStrings
 using DelimitedFiles
 using PGFPlotsX
-gr(fontfamily="Computer Modern", frame=:box, top_margin=4Plots.mm, left_margin=4Plots.mm, tickfontsize=10,labelfontsize=12,titlefontsize=14)
+gr(fontfamily="Computer Modern", frame=:box, top_margin=4Plots.mm, left_margin=4Plots.mm, tickfontsize=10,labelfontsize=12)
 
-files   = readdir("../flow_analysis/output/DiaL3",join=true) 
-ispath("output") || mkpath("output")
+function topology_plaquette_from_files(files; outdir = "./output/plots",  therm = 1)
 
-dir1 = "plots/topology_publication"
-dir2 = "plots/dial_topological_charge"
-ispath(dir1) || mkpath(dir1)
-ispath(dir2) || mkpath(dir2)
+    dir1 = joinpath(outdir,"topology_publication")
+    dir2 = joinpath(outdir,"dial_topological_charge")
+    ispath(dir1) || mkpath(dir1)
+    ispath(dir2) || mkpath(dir2)
 
-outfile = joinpath("output","topology.csv")
-io      = open(outfile,"w")
-write(io,"beta,am0f,am0as,Nt,Ns,Nconf,w0,Delta_w0,Q,Delta_Q,τint_Q,Delta_τint_Q\n")
+    for file in files
+        data = readdlm(file,',';skipstart=1)
+        cfgn, Q = Int.(data[:,1]), data[:,2]
+                
+        plt1,τmax,τexp = MadrasSokal.publication_plot(Q,"Q",therm)
+        plt2 = autocorrelation_overview(Q,"Q",therm;with_exponential=true)
+        
+        T, L, β, mf,  mas = parse_filename(file)
+        title = latexstring(L"\beta = %$(β), T\!\times\!L^3=%$(T)\!\times\!%$(L)^3, am_0^{\rm f}\!=\!%$(mf), am_0^{\rm as}\!=\!%$(mas)")
+        plot!(plt1,plot_title=title,size=(800,300))  
+        plot!(plt2,plot_title=title,titlefontsize=12)
 
-using DelimitedFiles
-
-for i in eachindex(files)
-    file = files[i]
-    therm = 1
-    @show file
-    T, L, β, mf,  mas = parse_filename(file)
-    @show T, L, β, mf,  mas
-    
-    data = readdlm(files[i],',';skipstart=1)
-    cfgn, Q = Int.(data[:,1]), data[:,2]
-    
-    obslabel = L"Q"
-    title = latexstring(L"\beta = %$(β), ~~ T \times L^3 = %$(T) \times %$(L)^3")
-
-    plt1,τmax,τexp = MadrasSokal.publication_plot(Q,obslabel,therm)
-    plt2 = autocorrelation_overview(Q,obslabel,therm;with_exponential=true)
-    
-    plot!(plt1,size=(800,300),plot_title=title)  
-    plot!(plt2,plot_title=title)
-
-    savefig(joinpath(dir1,basename(file)*".pdf"))
-    savefig(joinpath(dir2,basename(file)*".pdf"))
+        savefig(plt1,joinpath(dir1,basename(file)*".pdf"))
+        savefig(plt2,joinpath(dir2,basename(file)*".pdf"))
+    end
 end
+
+files = readdir("./input/DiaL3",join=true) 
+topology_plaquette_from_files(files; therm = 1)
