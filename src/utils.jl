@@ -6,6 +6,14 @@ function parse_filename(file)
     T, L, beta, mf,  mas = Int(val[1]), Int(val[2]), val[3], -val[4], -val[5]
     return T, L, beta, mf,  mas
 end
+function parse_configname(name)
+    s   = basename(name)
+    rx  = r"([0-9]+)x([0-9]+)x[0-9]+x[0-9]+nc[0-9]+nf[0-9]nas[0-9]+b([0-9]+\.[0-9]+)mf([0-9]+\.[0-9]+)mas([0-9]+\.[0-9]+)"
+    str = match(rx,s).captures
+    val = parse.(Float64,str)
+    T, L, beta, mf,  mas = Int(val[1]), Int(val[2]), val[3], -val[4], -val[5]
+    return T, L, beta, mf,  mas
+end
 function parse_ω0(line)
     str = replace(line,r"[a-z,A-Z,,,=,+,--,/,(,)]"=>" ")
     ω0, Δω0 = parse.(Float64,split(str))[2:3]
