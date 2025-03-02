@@ -57,7 +57,7 @@ function write_tau_csv(h5file,csv_io)
         τE, ΔτE, τexpE = read(f[e]["energy_density"],"tau_int"), read(f[e]["energy_density"],"Delta_tau_int"),read(f[e]["energy_density"],"tau_exp")
         τP, ΔτP, τexpP = read(f[e]["plaquette"],"tau_int"),      read(f[e]["plaquette"],"Delta_tau_int"),     read(f[e]["plaquette"],"tau_exp")
         τπ, Δτπ, τexpπ = read(f[e]["PS_correlator"],"tau_int"),  read(f[e]["PS_correlator"],"Delta_tau_int"), read(f[e]["PS_correlator"],"tau_exp")
-        println(csv_io,"$(rpad(e,pad0)) $(fmt(τP,ΔτP,pad1)) $(fmt(τexpP,pad2)) $(fmt(τQ,ΔτQ,pad1)) $(fmt(τexpQ,pad2)) $(fmt(τE,ΔτE,pad1)) $(fmt(τexpE,pad2)) $(fmt(τπ,Δτπ,pad1)) $(fmt(τexpπ,pad2))")
+        println(csv_io,"$(rpad(e*",",pad0)) $(fmt(τP,ΔτP,pad1)) $(fmt(τexpP,pad2)) $(fmt(τQ,ΔτQ,pad1)) $(fmt(τexpQ,pad2)) $(fmt(τE,ΔτE,pad1)) $(fmt(τexpE,pad2)) $(fmt(τπ,Δτπ,pad1)) $(fmt(τexpπ,pad2))")
     end
 end
 function write_tau_csv_no_correlators(h5file,csv_io)
@@ -70,7 +70,7 @@ function write_tau_csv_no_correlators(h5file,csv_io)
         τQ, ΔτQ, τexpQ = read(f[e]["topology"],"tau_int"),       read(f[e]["topology"],"Delta_tau_int"),      read(f[e]["topology"],"tau_exp")
         τE, ΔτE, τexpE = read(f[e]["energy_density"],"tau_int"), read(f[e]["energy_density"],"Delta_tau_int"),read(f[e]["energy_density"],"tau_exp")
         τP, ΔτP, τexpP = read(f[e]["plaquette"],"tau_int"),      read(f[e]["plaquette"],"Delta_tau_int"),     read(f[e]["plaquette"],"tau_exp")
-        println(csv_io,"$(rpad(e,pad0)) $(fmt(τP,ΔτP,pad1)) $(fmt(τexpP,pad2)) $(fmt(τQ,ΔτQ,pad1)) $(fmt(τexpQ,pad2)) $(fmt(τE,ΔτE,pad1)) $(fmt(τexpE,pad2))")
+        println(csv_io,"$(rpad(e*",",pad0)) $(fmt(τP,ΔτP,pad1)) $(fmt(τexpP,pad2)) $(fmt(τQ,ΔτQ,pad1)) $(fmt(τexpQ,pad2)) $(fmt(τE,ΔτE,pad1)) $(fmt(τexpE,pad2))")
     end
 end
 
