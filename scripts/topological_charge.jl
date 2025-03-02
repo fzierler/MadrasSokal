@@ -38,9 +38,9 @@ function full_observable_from_hdf5(file; label, name, plot_label, outdir = "./ou
     end
 end
 
-file = "./input/gradient_flow_data.hdf5"
-fileCB = "./input/ChimeraBaryon.hdf5" 
+file = "../FlowAnalysis.jl/output/gradient_flow_data_for_baryons.hdf5"
+fileCB = "./input/ChimeraBaryonCorrelators.hdf5" 
 full_observable_from_hdf5(file; label="topology", name="Q", plot_label="Q", therm = 1)
 full_observable_from_hdf5(file; label="energy_density", name="energy_density_w0_sym", plot_label=L"\mathcal{E}(w_0)", therm = 1)
 full_observable_from_hdf5(file; label="plaquette", name="plaquette", plot_label=L"<\!p\!>", therm = 1)
-full_observable_from_hdf5(fileCB; label="PS_correlator", name="source_N0_sink_N80/anti TRIPLET g0g1", index=(:,10), plot_label=L"C_\pi(t=10)", therm = 1)
+full_observable_from_hdf5(fileCB; label="PS_correlator", name="source_N0_sink_N80/anti TRIPLET g5", index=(:,10), plot_label=L"C_\pi(t=10)", therm = 1)
